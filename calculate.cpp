@@ -1,6 +1,6 @@
-// std form:
-// c * x^0 + b * x^1 + a * x^2 = 0
 
+#include "main.hpp"
 #include <iostream>
 
-int delta()
+
+
