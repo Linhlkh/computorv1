@@ -38,9 +38,7 @@ vector<Term> split_term(string &equa_side, bool reverse) {
         }
         // cout<<textTerm<<endl;
     }
-    // if (!trim(textTerm).empty())
     push_term(terms, textTerm, signTerm, reverse);
-    
     return terms;
 }
 
@@ -75,5 +73,44 @@ vector<Term> parsing(string &equation) {
 }
 
 vector<double> define_coef(vector<Term> &terms) {
-    
+    int max_degree = 0;
+    for (size_t i = 0; i < terms.size(); i++) {
+        size_t power_pos = terms[i].text.find('^');
+        int degree = 0;
+        if (power_pos != string::npos) {
+            degree = stoi(terms[i].text.substr(power_pos + 1));
+        }
+        else if (terms[i].text.find('X') != string::npos)
+            degree = 1;
+        if (degree > max_degree)
+            max_degree = degree;
+    }
+    vector<double> coef(max_degree + 1, 0.0);
+    for (size_t i = 0; i < terms.size(); i++) {
+        size_t power_pos = terms[i].text.find('^');
+        size_t star_pos = terms[i].text.find('*');
+        size_t x_pos = terms[i].text.find('x');
+
+        int degree = 0;
+        if (power_pos != string::npos)
+            degree = stoi(terms[i].text.substr(power_pos + 1));
+        else if (x_pos != string::npos)
+            degree = 1;
+        
+        string val;
+        if (star_pos != string::npos)
+            val = terms[i].text.substr(0, star_pos);
+        else if (x_pos != string::npos)
+            val = terms[i].text.substr(0, x_pos);
+        else
+            val = terms[i].text;
+
+        val = trim(val);
+        double value = val.empty() ? 1.0 : stod(val);
+        
+        if (terms[i].sign == '-')
+            value = -value;
+        coef[degree] += value;
+    }
+    return coef;
 }
