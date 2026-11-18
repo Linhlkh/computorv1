@@ -17,11 +17,9 @@ struct Term {
 
 void exitErr(string msg);
 string trim(string &equation);
-vector<Term> parsing(string equation);
-vector<double> define_coef(string equation);
-void printReducedForm(vector<double> coef);
-int define_degree(string equation);
-
-// void delta(float a, float b, float c);
+vector<Term> parsing(string &equation);
+// vector<double> define_coef(string equation);
+// void printReducedForm(vector<double> coef);
+// int define_degree(string equation);
 
 #endif
