@@ -66,7 +66,7 @@ vector<Term> parsing(string &equation) {
         left_term.push_back(right_term[i]);
     
     for (size_t i = 0; i < left_term.size(); i++) {
-        cout << "vector term: " << left_term[i].text << endl;
+        // cout << "vector term: " << left_term[i].text << endl;
         check_syntax(left_term[i].text);
     }
     return left_term;
@@ -89,8 +89,8 @@ vector<double> define_coef(vector<Term> &terms) {
     for (size_t i = 0; i < terms.size(); i++) {
         size_t power_pos = terms[i].text.find('^');
         size_t star_pos = terms[i].text.find('*');
-        size_t x_pos = terms[i].text.find('x');
-
+        size_t x_pos = terms[i].text.find('X');
+        
         int degree = 0;
         if (power_pos != string::npos)
             degree = stoi(terms[i].text.substr(power_pos + 1));
@@ -104,13 +104,31 @@ vector<double> define_coef(vector<Term> &terms) {
             val = terms[i].text.substr(0, x_pos);
         else
             val = terms[i].text;
-
-        val = trim(val);
-        double value = val.empty() ? 1.0 : stod(val);
         
+        val = trim(val);
+        // cout << val << endl;
+        double value = val.empty() ? 1.0 : stod(val);
         if (terms[i].sign == '-')
             value = -value;
         coef[degree] += value;
     }
+    // for (size_t i = 0; i < coef.size(); i++) {
+    //     cout<< "coef: " << coef[i] << endl;
+    // }
     return coef;
+}
+
+int find_degree(vector<double> &coef) {
+    for (int i = (int)coef.size() - 1; i >= 0; i--) {
+        if (coef[i] != 0){
+            cout << "Polynomial degree: " << i << endl;
+            return i;
+        }
+    }
+    cout << "Polynomial degree: 0" << endl;
+    return 0;
+}
+
+void reduced_form(vector<double> &coef) {
+    
 }

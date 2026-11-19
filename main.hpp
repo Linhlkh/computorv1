@@ -16,10 +16,9 @@ struct Term {
 };
 
 //parsing.cpp
-void exitErr(string msg);
-string trim(string &equation);
 vector<Term> parsing(string &equation);
 vector<double> define_coef(vector<Term> &terms);
+int find_degree(vector<double> &coef);
 
 //utils.cpp
 void exitErr(string msg);

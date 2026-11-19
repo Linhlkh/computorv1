@@ -1,8 +1,8 @@
 #include "main.hpp"
 
-void solveEquation(string equation){
+// void solveEquation(string equation){
 
-}
+// }
 
 int main(int ac, char **av) {
     // std::cout << "Hello, World!" << std::endl;
@@ -21,7 +21,15 @@ int main(int ac, char **av) {
         cerr << "Usage: ./computor \"equation\"" << endl;
         return 1;
     }
-    parsing(line);
+    vector<Term> terms = parsing(line);
+    // for (size_t i = 0; i < terms.size(); i++)
+    // {
+    //     cout << "hehe" << endl;
+    //     cout << terms[i].text << endl;
+    //     cout << terms[i].sign << endl;
+    // }
+    vector<double> coef = define_coef(terms);
+    find_degree(coef);
     // solveEquation(line);
     return 0;
 }
