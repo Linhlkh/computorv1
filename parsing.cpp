@@ -1,5 +1,6 @@
 #include "main.hpp"
 
+
 void push_term(vector<Term> &terms, string textTerm, char signTerm, bool reverse){
     string text = trim(textTerm);
     if (text.empty())
@@ -87,14 +88,22 @@ vector<double> define_coef(vector<Term> &terms) {
         size_t power_pos = terms[i].text.find('^');
         int degree = 0;
         if (power_pos != string::npos) {
-            degree = stoi(terms[i].text.substr(power_pos + 1));
+            // degree = stoi(terms[i].text.substr(power_pos + 1));
+            try {
+                degree = stoi(terms[i].text.substr(power_pos + 1));
+            } catch (const std::out_of_range&) {
+                exitErr("Exponent is too large");
+            }
         }
         else if (terms[i].text.find('X') != string::npos)
             degree = 1;
+        if (degree > 10000)
+            exitErr("Exponent is too large");
         if (degree > max_degree)
             max_degree = degree;
     }
     vector<double> coef(max_degree + 1, 0.0);
+    vector<double> largest_term(coef.size(), 0.0);
     for (size_t i = 0; i < terms.size(); i++) {
         // cout <<"jj"<< endl;
         size_t power_pos = terms[i].text.find('^');
@@ -117,10 +126,33 @@ vector<double> define_coef(vector<Term> &terms) {
         
         val = trim(val);
         // cout << val << endl;
-        double value = val.empty() ? 1.0 : stod(val);
+        // double value = val.empty() ? 1.0 : stod(val);
+        double value = 1.0;
+        if (!val.empty()) {
+            try {
+                value = stod(val);
+            } catch (const std::out_of_range&) {
+                exitErr("Coefficient is out of range");
+            }
+        }
         if (terms[i].sign == '-')
             value = -value;
         coef[degree] += value;
+
+        double abs_value = (value < 0.0) ? -value : value;
+        if (abs_value > largest_term[degree])
+            largest_term[degree] = abs_value;
+    }
+
+    const double relative_tolerance =
+    8.0 * std::numeric_limits<double>::epsilon();
+
+    for (size_t i = 0; i < coef.size(); ++i) {
+        double abs_coef = (coef[i] < 0.0) ? -coef[i] : coef[i];
+        double tolerance = relative_tolerance * largest_term[i];
+
+        if (abs_coef <= tolerance)
+            coef[i] = 0.0;
     }
     // for (size_t i = 0; i < coef.size(); i++) {
     //     cout<< "coef: " << coef[i] << endl;
@@ -142,17 +174,18 @@ int find_degree(vector<double> &coef) {
 void reduced_form(vector<double> &coef) {
     bool first = true;
     string value_text;
-    
-    // if (coef.empty())
-    //     cout << "Reduced form: 0 = 0" << endl;
-    for (size_t i = 0; i < coef.size(); i++){
-        // cout <<"hehe: "<< coef.size() << endl;
+    size_t end = coef.size();
+
+    while (end > 1 && coef[end - 1] == 0.0)
+        --end;
+    for (size_t i = 0; i < end; i++){
         double val = coef[i];
+
+        if (val == 0.0)
+            continue;
         string sign = "+";
         double abs = val;
 
-        // if (val == 0)
-        //     continue;
         if (val < 0) {
             sign = "-";
             abs = -val;
@@ -165,8 +198,9 @@ void reduced_form(vector<double> &coef) {
         }
         else 
             value_text += " " + sign + " " + format_number(abs) + " * X^" + to_string(i);
-
     }
+    if (first)
+        value_text = "0";
     value_text += " = 0";
     cout << "Reduced form: " << value_text << endl;
 }

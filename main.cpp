@@ -10,7 +10,7 @@ int main(int ac, char **av) {
     else if( ac == 2)
         line = av[1];
     else {
-        cerr << "Usage: ./computor \"equation\"" << endl;
+        cerr << "Usage: ./computorv1 \"equation\"" << endl;
         return 1;
     }
     vector<Term> terms = parsing(line);

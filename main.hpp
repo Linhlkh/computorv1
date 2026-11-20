@@ -6,6 +6,8 @@
 #include <vector>
 #include <regex>
 #include <map>
+#include <stdexcept>
+#include <limits>
 
 using namespace std;
 

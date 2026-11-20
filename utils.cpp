@@ -67,6 +67,9 @@ string fraction_to_string(double numerator, double denominator) {
     long long num = ft_round(numerator * scale);
     long long den = ft_round(denominator * scale);
 
+    if (den == 0)
+        return format_number(numerator / denominator);
+
     long long g = ft_gdc(num, den);
 
     if (g != 0)

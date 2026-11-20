@@ -1,6 +1,5 @@
 
 #include "main.hpp"
-#include <iostream>
 
 void solve_degree_0(vector<double> &coef){
     if (coef[0] == 0)
@@ -27,7 +26,18 @@ void solve_degree_2(vector<double> &coef) {
     double b = coef[1];
     double c = coef[0];
     
-    double delta = b * b - 4 * a * c;
+    // double delta = b * b - 4 * a * c;
+    double b_squared = b * b;
+    double four_ac = 4.0 * a * c;
+    double delta = b_squared - four_ac;
+
+    double abs_four_ac = (four_ac < 0.0) ? -four_ac : four_ac;
+    double scale = (b_squared > abs_four_ac) ? b_squared : abs_four_ac;
+    double tolerance = 8.0 * std::numeric_limits<double>::epsilon() * scale;
+
+    if (delta >= -tolerance && delta <= tolerance)
+        delta = 0.0;
+
     cout << "Coef: a = " << format_number(a) << "; b = " << format_number(b) << "; c = " << format_number(c) << endl;
     cout << "Discriminant = b^2 - 4ac = " << format_number(b) << "^2 - 4 * " << format_number(a) << " * " << format_number(c) << " = " << format_number(delta) << endl; 
     if (delta == 0) {
@@ -42,7 +52,7 @@ void solve_degree_2(vector<double> &coef) {
         double solution2 = (-b - ft_sqrt(delta)) / (2 * a);
         cout << "Discriminant is strictly positive, the two solutions are:" << endl;
         cout << "Solution 1: (-b + sqrt(delta)) / (2a) = " << format_number(solution1) << endl;
-        cout << "Solution 1: (-b - sqrt(delta)) / (2a) = " << format_number(solution2) << endl;
+        cout << "Solution 2: (-b - sqrt(delta)) / (2a) = " << format_number(solution2) << endl;
 
         if (is_perfect_square(delta)) {
             cout << "Solution as an irreducible fraction: " << endl;
@@ -56,8 +66,8 @@ void solve_degree_2(vector<double> &coef) {
         double imagine = sqrt_delta / (2 * a);
 
         cout << "Discriminant is strictly negative, the two complex solutions are:" << endl;
-        cout << "Solution 1: -b/(2a) + sqrt(delta)/(2a) * i = " << format_number(real) << " + " << format_number(imagine) << "i" << endl;
-        cout << "Solution 2: -b/(2a) - sqrt(delta)/(2a) * i= " << format_number(real) << " - " << format_number(imagine) << "i" << endl;
+        cout << "Solution 1: -b/(2a) + sqrt(-delta)/(2a) * i = " << format_number(real) << " + " << format_number(imagine) << "i" << endl;
+        cout << "Solution 2: -b/(2a) - sqrt(-delta)/(2a) * i= " << format_number(real) << " - " << format_number(imagine) << "i" << endl;
 
         if (is_perfect_square(-delta)) {
             cout << "Solution as an irreducible fraction: " << endl;
