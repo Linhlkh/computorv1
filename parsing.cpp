@@ -14,6 +14,7 @@ void push_term(vector<Term> &terms, string textTerm, char signTerm, bool reverse
 }
 
 vector<Term> split_term(string &equa_side, bool reverse) {
+    // cout << equa_side << endl;
     vector<Term> terms;
     string textTerm = "";
     char signTerm = '+';
@@ -62,6 +63,10 @@ vector<Term> parsing(string &equation) {
 
     vector<Term> left_term = split_term(left_equa, false);
     vector<Term> right_term = split_term(right_equa, true);
+
+    // cout << "size left_term: " << left_term.size() << endl;
+    // cout << "size right_term: " << right_term.size() << endl;
+    
     for (size_t i = 0; i < right_term.size(); i++)
         left_term.push_back(right_term[i]);
     
@@ -69,10 +74,14 @@ vector<Term> parsing(string &equation) {
         // cout << "vector term: " << left_term[i].text << endl;
         check_syntax(left_term[i].text);
     }
+    // cout << "size left_term: " << left_term.size() << endl;
     return left_term;
 }
 
 vector<double> define_coef(vector<Term> &terms) {
+    // if (terms.empty())
+    //     cout << "empty term" << endl;
+
     int max_degree = 0;
     for (size_t i = 0; i < terms.size(); i++) {
         size_t power_pos = terms[i].text.find('^');
@@ -87,6 +96,7 @@ vector<double> define_coef(vector<Term> &terms) {
     }
     vector<double> coef(max_degree + 1, 0.0);
     for (size_t i = 0; i < terms.size(); i++) {
+        // cout <<"jj"<< endl;
         size_t power_pos = terms[i].text.find('^');
         size_t star_pos = terms[i].text.find('*');
         size_t x_pos = terms[i].text.find('X');
@@ -130,5 +140,33 @@ int find_degree(vector<double> &coef) {
 }
 
 void reduced_form(vector<double> &coef) {
+    bool first = true;
+    string value_text;
     
+    // if (coef.empty())
+    //     cout << "Reduced form: 0 = 0" << endl;
+    for (size_t i = 0; i < coef.size(); i++){
+        // cout <<"hehe: "<< coef.size() << endl;
+        double val = coef[i];
+        string sign = "+";
+        double abs = val;
+
+        // if (val == 0)
+        //     continue;
+        if (val < 0) {
+            sign = "-";
+            abs = -val;
+        }
+        if (first) {
+            if (sign == "-")
+                value_text += "-";
+            value_text += format_number(abs) + " * X^" + to_string(i);
+            first = false;
+        }
+        else 
+            value_text += " " + sign + " " + format_number(abs) + " * X^" + to_string(i);
+
+    }
+    value_text += " = 0";
+    cout << "Reduced form: " << value_text << endl;
 }

@@ -1,35 +1,35 @@
 #include "main.hpp"
 
-// void solveEquation(string equation){
-
-// }
-
 int main(int ac, char **av) {
-    // std::cout << "Hello, World!" << std::endl;
     string line;
     if (ac == 1) {
         cout << "Please enter an equation:" << endl;
         if (!getline(cin, line))
             return 1;
-        // if (line.empty())
-        //     return 0;
     }
-    else if( ac == 2) {
+    else if( ac == 2)
         line = av[1];
-    }
     else {
         cerr << "Usage: ./computor \"equation\"" << endl;
         return 1;
     }
     vector<Term> terms = parsing(line);
-    // for (size_t i = 0; i < terms.size(); i++)
-    // {
-    //     cout << "hehe" << endl;
-    //     cout << terms[i].text << endl;
-    //     cout << terms[i].sign << endl;
-    // }
     vector<double> coef = define_coef(terms);
-    find_degree(coef);
-    // solveEquation(line);
+    reduced_form(coef);
+    int degree = find_degree(coef);
+    switch (degree)
+    {
+    case 0:
+        solve_degree_0(coef);
+        break;
+    case 1:
+        solve_degree_1(coef);
+        break;
+    case 2:
+        solve_degree_2(coef);
+        break;
+    default:
+        cout << "The polynomial degree is strictly greater than 2, I can't solve." << endl;
+    }
     return 0;
 }
