@@ -17,7 +17,7 @@ void solve_degree_1(vector<double> &coef){
         solve_degree_0(coef);
     else {
         double solution = -b/a;
-        cout << "The solution is:" << endl << format_number(solution) << endl;
+        cout << "The solution is: " << endl << format_number(solution) << endl;
         cout << "As an irreducible fraction: " << fraction_to_string(-b, a) << endl;
     }
 }
@@ -28,16 +28,21 @@ void solve_degree_2(vector<double> &coef) {
     double c = coef[0];
     
     double delta = b * b - 4 * a * c;
+    cout << "Coef: a = " << format_number(a) << "; b = " << format_number(b) << "; c = " << format_number(c) << endl;
+    cout << "Discriminant = b^2 - 4ac = " << format_number(b) << "^2 - 4 * " << format_number(a) << " * " << format_number(c) << " = " << format_number(delta) << endl; 
     if (delta == 0) {
         double solution = -b / (2 * a);
-        cout << "Discriminant is 0, the solution is:" << endl << format_number(solution) << endl;
+        cout << "Discriminant is 0, the solution is: " << endl;
+        cout << "Solution = -b / (2 * a) = " << format_number(-b) << " / (2 * " << format_number(a) << ") = ";
+        cout << format_number(solution) << endl;
         cout << "As an irreducible fraction: " << fraction_to_string(-b, (2 * a)) << endl;
     }
     else if (delta > 0) {
         double solution1 = (-b + ft_sqrt(delta)) / (2 * a);
         double solution2 = (-b - ft_sqrt(delta)) / (2 * a);
         cout << "Discriminant is strictly positive, the two solutions are:" << endl;
-        cout << format_number(solution1) << endl << format_number(solution2) << endl;
+        cout << "Solution 1: (-b + sqrt(delta)) / (2a) = " << format_number(solution1) << endl;
+        cout << "Solution 1: (-b - sqrt(delta)) / (2a) = " << format_number(solution2) << endl;
 
         if (is_perfect_square(delta)) {
             cout << "Solution as an irreducible fraction: " << endl;
@@ -51,8 +56,8 @@ void solve_degree_2(vector<double> &coef) {
         double imagine = sqrt_delta / (2 * a);
 
         cout << "Discriminant is strictly negative, the two complex solutions are:" << endl;
-        cout << format_number(real) << " + " << format_number(imagine) << "i" << endl;
-        cout << format_number(real) << " - " << format_number(imagine) << "i" << endl;
+        cout << "Solution 1: -b/(2a) + sqrt(delta)/(2a) * i = " << format_number(real) << " + " << format_number(imagine) << "i" << endl;
+        cout << "Solution 2: -b/(2a) - sqrt(delta)/(2a) * i= " << format_number(real) << " - " << format_number(imagine) << "i" << endl;
 
         if (is_perfect_square(-delta)) {
             cout << "Solution as an irreducible fraction: " << endl;
@@ -60,6 +65,5 @@ void solve_degree_2(vector<double> &coef) {
             cout << fraction_to_string((-b), (2 * a)) << " - " << fraction_to_string(sqrt_delta, (2 * a)) << "i" << endl;
         }
     }
-
 }
 
